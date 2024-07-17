@@ -1,8 +1,8 @@
 class Book {
   final String title;
   final String author;
-  double rating; // New property for rating
-  bool isRead;   // New property for read/unread status
+  double rating; // Property for rating
+  bool isRead;   // Property for read/unread status
 
   Book({
     required this.title,
