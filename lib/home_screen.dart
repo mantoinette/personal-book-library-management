@@ -43,6 +43,15 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _deleteBook(int index) {
+    setState(() {
+      books.removeAt(index);
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Book deleted successfully!')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final sortingProvider = Provider.of<SortingProvider>(context);
@@ -88,37 +97,43 @@ class _HomeScreenState extends State<HomeScreen> {
               DataColumn(label: Text('Author')),
               DataColumn(label: Text('Actions')),
             ],
-            rows: sortedBooks
-                .asMap()
-                .entries
-                .map((entry) {
+            rows: sortedBooks.asMap().entries.map((entry) {
               int index = entry.key;
               Book book = entry.value;
               return DataRow(cells: [
                 DataCell(Text(book.title)),
                 DataCell(Text(book.author)),
                 DataCell(
-                  IconButton(
-                    icon: Icon(Icons.edit, color: Colors.blue),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddEditBookScreen(
-                            title: book.title,
-                            author: book.author,
-                            onSave: (newTitle, newAuthor) {
-                              _editBook(index, newTitle, newAuthor);
-                            },
-                          ),
-                        ),
-                      );
-                    },
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.edit, color: Colors.blue),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddEditBookScreen(
+                                title: book.title,
+                                author: book.author,
+                                onSave: (newTitle, newAuthor) {
+                                  _editBook(index, newTitle, newAuthor);
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          _deleteBook(index);
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ]);
-            })
-                .toList(),
+            }).toList(),
           ),
         ),
       ),
