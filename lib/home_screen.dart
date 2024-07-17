@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'Sorting_provider.dart';
 import 'add_edit_book_screen.dart';
 import 'models/book.dart';
 import 'Sorting_provider.dart';
@@ -13,10 +14,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Book> books = [];
 
-  void _addBook(String title, String author) {
+  void _addBook(String title, String author, double rating, bool isRead) {
     if (title.isNotEmpty && author.isNotEmpty) {
       setState(() {
-        books.add(Book(title: title, author: author));
+        books.add(Book(title: title, author: author, rating: rating, isRead: isRead));
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Book added successfully!')),
@@ -28,10 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _editBook(int index, String newTitle, String newAuthor) {
+  void _editBook(int index, String newTitle, String newAuthor, double newRating, bool newIsRead) {
     if (newTitle.isNotEmpty && newAuthor.isNotEmpty) {
       setState(() {
-        books[index] = Book(title: newTitle, author: newAuthor);
+        books[index] = Book(title: newTitle, author: newAuthor, rating: newRating, isRead: newIsRead);
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Book updated successfully!')),
@@ -62,8 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
         case 'author':
           return a.author.compareTo(b.author);
         case 'rating':
-        // Implement sorting by rating if you have a rating property
-          return 0; // Placeholder
+          return b.rating.compareTo(a.rating); // Sort by rating
         case 'title':
         default:
           return a.title.compareTo(b.title);
@@ -95,6 +95,8 @@ class _HomeScreenState extends State<HomeScreen> {
             columns: [
               DataColumn(label: Text('Book Title')),
               DataColumn(label: Text('Author')),
+              DataColumn(label: Text('Rating')),
+              DataColumn(label: Text('Read')),
               DataColumn(label: Text('Actions')),
             ],
             rows: sortedBooks.asMap().entries.map((entry) {
@@ -103,6 +105,8 @@ class _HomeScreenState extends State<HomeScreen> {
               return DataRow(cells: [
                 DataCell(Text(book.title)),
                 DataCell(Text(book.author)),
+                DataCell(Text(book.rating.toString())), // Book rating
+                DataCell(Text(book.isRead ? 'Read' : 'Unread')), // Read status
                 DataCell(
                   Row(
                     children: [
@@ -115,8 +119,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               builder: (context) => AddEditBookScreen(
                                 title: book.title,
                                 author: book.author,
-                                onSave: (newTitle, newAuthor) {
-                                  _editBook(index, newTitle, newAuthor);
+                                rating: book.rating,
+                                isRead: book.isRead,
+                                onSave: (newTitle, newAuthor, newRating, newIsRead) {
+                                  _editBook(index, newTitle, newAuthor, newRating, newIsRead);
                                 },
                               ),
                             ),
@@ -143,8 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
             context,
             MaterialPageRoute(
               builder: (context) => AddEditBookScreen(
-                onSave: (title, author) {
-                  _addBook(title, author);
+                onSave: (title, author, rating, isRead) {
+                  _addBook(title, author, rating, isRead);
                 },
               ),
             ),

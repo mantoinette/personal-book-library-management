@@ -1,12 +1,13 @@
-
 import 'package:flutter/material.dart';
 
 class AddEditBookScreen extends StatefulWidget {
   final String? title;
   final String? author;
-  final Function(String title, String author)? onSave;
+  final double? rating;
+  final bool? isRead;
+  final Function(String title, String author, double rating, bool isRead)? onSave;
 
-  AddEditBookScreen({this.title, this.author, this.onSave});
+  AddEditBookScreen({this.title, this.author, this.rating, this.isRead, this.onSave});
 
   @override
   _AddEditBookScreenState createState() => _AddEditBookScreenState();
@@ -15,6 +16,8 @@ class AddEditBookScreen extends StatefulWidget {
 class _AddEditBookScreenState extends State<AddEditBookScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController authorController = TextEditingController();
+  double rating = 0.0;
+  bool isRead = false;
 
   @override
   void initState() {
@@ -25,12 +28,18 @@ class _AddEditBookScreenState extends State<AddEditBookScreen> {
     if (widget.author != null) {
       authorController.text = widget.author!;
     }
+    if (widget.rating != null) {
+      rating = widget.rating!;
+    }
+    if (widget.isRead != null) {
+      isRead = widget.isRead!;
+    }
   }
 
   void _saveBook() {
     if (titleController.text.isNotEmpty && authorController.text.isNotEmpty) {
       if (widget.onSave != null) {
-        widget.onSave!(titleController.text, authorController.text);
+        widget.onSave!(titleController.text, authorController.text, rating, isRead);
         Navigator.pop(context); // Go back after saving
       }
     } else {
@@ -62,6 +71,34 @@ class _AddEditBookScreenState extends State<AddEditBookScreen> {
                 labelText: 'Author',
                 border: OutlineInputBorder(),
               ),
+            ),
+            SizedBox(height: 10),
+            Text('Rate this book:'),
+            Slider(
+              value: rating,
+              min: 0,
+              max: 5,
+              divisions: 5,
+              label: rating.toString(),
+              onChanged: (double value) {
+                setState(() {
+                  rating = value;
+                });
+              },
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Read:'),
+                Checkbox(
+                  value: isRead,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isRead = value!;
+                    });
+                  },
+                ),
+              ],
             ),
             SizedBox(height: 20),
             ElevatedButton(
