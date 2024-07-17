@@ -1,0 +1,25 @@
+name: books_library
+description: A Flutter app to manage your personal book library.
+
+publish_to: 'none' # Remove this line if you intend to publish the package.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"  # Specify the SDK constraint
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.0.5
+  sqflite: ^2.0.0
+  path_provider: ^2.0.0
+  shared_preferences: ^2.0.13
+  path: ^1.8.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
