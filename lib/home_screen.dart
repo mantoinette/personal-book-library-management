@@ -28,7 +28,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   void _addBook(String title, String author, double rating, bool isRead) {
-    if (title.isNotEmpty && author.isNotEmpty) {
+    if (title.isNotEmpty && author.isNotEmpty) {  // Corrected here
       setState(() {
         books.add(Book(title: title, author: author, rating: rating, isRead: isRead));
         _filterBooks(); // Update filteredBooks when a new book is added
@@ -132,26 +132,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
+                  columnSpacing: 10.0,
+                  headingRowColor: MaterialStateColor.resolveWith((states) => Colors.grey[200]!),
                   columns: [
-                    DataColumn(label: Text('Book Title')),
-                    DataColumn(label: Text('Author')),
-                    DataColumn(label: Text('Rating')),
-                    DataColumn(label: Text('Read')),
-                    DataColumn(label: Text('Actions')),
+                    DataColumn(label: Text('Book Title', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                    DataColumn(label: Text('Author', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                    DataColumn(label: Text('Rating', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                    DataColumn(label: Text('Read', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                    DataColumn(label: Text('Actions', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
                   ],
                   rows: filteredBooks.asMap().entries.map((entry) {
                     int index = entry.key;
                     Book book = entry.value;
                     return DataRow(cells: [
-                      DataCell(Text(book.title)),
-                      DataCell(Text(book.author)),
-                      DataCell(Text(book.rating.toString())),
-                      DataCell(Text(book.isRead ? 'Read' : 'Unread')),
+                      DataCell(Text(book.title, style: TextStyle(fontSize: 12))),
+                      DataCell(Text(book.author, style: TextStyle(fontSize: 12))),
+                      DataCell(Text(book.rating.toString(), style: TextStyle(fontSize: 12))),
+                      DataCell(Text(book.isRead ? 'Read' : 'Unread', style: TextStyle(fontSize: 12))),
                       DataCell(
                         Row(
                           children: [
                             IconButton(
-                              icon: Icon(Icons.edit, color: Colors.blue),
+                              icon: Icon(Icons.edit, color: Colors.blue, size: 20),
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -169,8 +171,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 );
                               },
                             ),
+                            SizedBox(width: 8.0),
                             IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
+                              icon: Icon(Icons.delete, color: Colors.red, size: 20),
                               onPressed: () {
                                 _deleteBook(index);
                               },
