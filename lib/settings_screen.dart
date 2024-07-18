@@ -1,15 +1,13 @@
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'Sorting_provider.dart';
-import 'Sorting_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'theme_provider.dart';
+import 'sorting_provider.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final sortingProvider = Provider.of<SortingProvider>(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkMode = ref.watch(themeProvider);
+    final sortingCriteria = ref.watch(sortingProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text('Settings')),
@@ -24,9 +22,9 @@ class SettingsScreen extends StatelessWidget {
             ),
             SwitchListTile(
               title: Text('Dark Mode'),
-              value: themeProvider.isDarkMode,
+              value: isDarkMode,
               onChanged: (bool value) {
-                themeProvider.toggleTheme();
+                ref.read(themeProvider.notifier).toggleTheme();
               },
             ),
             SizedBox(height: 20),
@@ -37,25 +35,25 @@ class SettingsScreen extends StatelessWidget {
             RadioListTile(
               title: Text('Title'),
               value: 'title',
-              groupValue: sortingProvider.sortingCriteria,
+              groupValue: sortingCriteria,
               onChanged: (value) {
-                sortingProvider.setSortingCriteria(value as String);
+                ref.read(sortingProvider.notifier).setSortingCriteria(value as String);
               },
             ),
             RadioListTile(
               title: Text('Author'),
               value: 'author',
-              groupValue: sortingProvider.sortingCriteria,
+              groupValue: sortingCriteria,
               onChanged: (value) {
-                sortingProvider.setSortingCriteria(value as String);
+                ref.read(sortingProvider.notifier).setSortingCriteria(value as String);
               },
             ),
             RadioListTile(
               title: Text('Rating'),
               value: 'rating',
-              groupValue: sortingProvider.sortingCriteria,
+              groupValue: sortingCriteria,
               onChanged: (value) {
-                sortingProvider.setSortingCriteria(value as String);
+                ref.read(sortingProvider.notifier).setSortingCriteria(value as String);
               },
             ),
           ],

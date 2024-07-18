@@ -1,27 +1,23 @@
-
-import 'package:flutter/material.dart';
+// sorting_provider.dart
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SortingProvider with ChangeNotifier {
-  String _sortingCriteria = 'title';
+final sortingProvider = StateNotifierProvider<SortingNotifier, String>((ref) => SortingNotifier());
 
-  String get sortingCriteria => _sortingCriteria;
-
-  SortingProvider() {
+class SortingNotifier extends StateNotifier<String> {
+  SortingNotifier() : super('title') {
     _loadSortingCriteria();
   }
 
   void setSortingCriteria(String criteria) async {
-    _sortingCriteria = criteria;
-    notifyListeners();
+    state = criteria;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('sortingCriteria', _sortingCriteria);
+    prefs.setString('sortingCriteria', state);
   }
 
   void _loadSortingCriteria() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _sortingCriteria = prefs.getString('sortingCriteria') ?? 'title';
-    notifyListeners();
+    state = prefs.getString('sortingCriteria') ?? 'title';
   }
 }

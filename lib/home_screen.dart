@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'Sorting_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'sorting_provider.dart';
 import 'models/book.dart';
 import 'add_edit_book_screen.dart';
 import 'settings_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<Book> books = [];
   List<Book> filteredBooks = [];
   TextEditingController searchController = TextEditingController();
@@ -81,11 +81,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final sortingProvider = Provider.of<SortingProvider>(context);
+    final sortingCriteria = ref.watch(sortingProvider);
 
     // Ensure filteredBooks is sorted
     filteredBooks.sort((a, b) {
-      switch (sortingProvider.sortingCriteria) {
+      switch (sortingCriteria) {
         case 'author':
           return a.author.compareTo(b.author);
         case 'rating':
@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Books Library'),
+        title: Text('Library Catalog'),
         actions: [
           IconButton(
             icon: Icon(Icons.settings),

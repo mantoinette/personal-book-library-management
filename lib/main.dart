@@ -1,31 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'Sorting_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'home_screen.dart';
 import 'settings_screen.dart';
 import 'theme_provider.dart';
-
+import 'sorting_provider.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => SortingProvider()),
-      ],
-      child: MyApp(),
-    ),
-  );
+  runApp(ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkMode = ref.watch(themeProvider);
 
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: themeProvider.isDarkMode ? ThemeData.dark() : ThemeData.light(),
+      theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
       home: HomeScreen(),
     );
   }
